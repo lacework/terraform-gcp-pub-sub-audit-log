@@ -173,10 +173,10 @@ resource "time_sleep" "wait_time" {
 
 resource "lacework_integration_gcp_pub_sub_audit_log" "default" {
   name             = var.lacework_integration_name
-  integration_type = var.integration_type
+  integration_type = var.integration_type 
   project_id       = local.project_id
   organization_id  = var.organization_id
-  subscription     = google_pubsub_subscription.lacework_subscription.id
+  subscription_id  = google_pubsub_subscription.lacework_subscription.id
   topic_id         = google_pubsub_topic.lacework_topic.id
   credentials {
     client_id      = local.service_account_json_key.client_id
