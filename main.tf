@@ -4,13 +4,14 @@ locals {
   sink_name = length(var.existing_sink_name) > 0 ? var.existing_sink_name : (
     local.org_integration ? "${var.prefix}-${var.organization_id}-lacework-sink-${random_id.uniq.hex}" : "${var.prefix}-lacework-sink-${random_id.uniq.hex}"
   )
-  logging_sink_writer_identity = length(var.existing_sink_name) > 0 ? null : (
+  logging_sink_writer_identity = length(var.existing_sink_name) > 0 ? ["serviceAccount:${local.service_account_json_key.client_email}"] : (
     (local.org_integration) ? (
       [google_logging_organization_sink.lacework_organization_sink[0].writer_identity]
       ) : (
       [google_logging_project_sink.lacework_project_sink[0].writer_identity]
     )
   )
+
   service_account_name = var.use_existing_service_account ? (
     var.service_account_name
     ) : (
