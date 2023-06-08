@@ -1,7 +1,8 @@
 # Release Notes
-Another day, another release. These are the release notes for the version `v0.2.1`.
+Another day, another release. These are the release notes for the version `v0.2.2`.
 
 ## Bug Fixes
-* fix: pin Lacework provider version to ~> 1.5 (#4) (Salim Afiune)([7177884](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/7177884d1b4456192d705f7c00c3c1048c5a5b15))
+* fix: enable use of existing sink name (#6) (djmctavish)([f8850d8](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/f8850d835f2de25dee3a3b0024c6161f5634c63d))
 ## Other Changes
-* ci: version bump to v0.2.1-dev (Lacework)([ec85fec](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/ec85fece9c4be84ec24ce4c879c4716cacbdf345))
+* chore: add IAM role for organization viewer (#8) (freeman-lw)([fb90e37](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/fb90e37db1b0b49b0ae7aadeeed09e59243be089))
+* ci: version bump to v0.2.2-dev (Lacework)([4e564f6](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/4e564f64cb2e82915da9d0e2ffab452e0bdc93ab))
