@@ -15,7 +15,7 @@ output "pubsub_subscription_name" {
 }
 
 output "pubsub_topic_name" {
-  value       = google_pubsub_topic.lacework_topic.name
+  value       = google_pubsub_topic.lacework_topic[0].name
   description = "The PubSub topic name"
 }
 
