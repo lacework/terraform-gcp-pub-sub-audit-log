@@ -10,7 +10,7 @@ output "service_account_private_key" {
 }
 
 output "pubsub_subscription_name" {
-  value       = google_pubsub_subscription.lacework_subscription.name
+  value       = google_pubsub_subscription.lacework_subscription[0].name
   description = "The PubSub subscription name"
 }
 
