@@ -68,7 +68,8 @@ module "lacework_al_ps_svc_account" {
 }
 
 resource "google_pubsub_topic" "lacework_topic" {
-  name       = "${var.prefix}-lacework-topic-${random_id.uniq.hex}"
+  count      = length(var.existing_pub_sub_topic_id) > 0 ? 0 : 1
+  name       = length(var.existing_pub_sub_topic_id) > 0 ? var.existing_pub_sub_topic_id : "${var.prefix}-lacework-topic-${random_id.uniq.hex}"
   project    = local.project_id
   depends_on = [google_project_service.required_apis]
   labels     = merge(var.labels, var.pubsub_topic_labels)
@@ -83,8 +84,9 @@ resource "google_pubsub_topic_iam_binding" "topic_publisher" {
 }
 
 resource "google_pubsub_subscription" "lacework_subscription" {
+  count                      = length(var.existing_pub_sub_subscription_name) > 0 ? 0 : 1
   project                    = local.project_id
-  name                       = "${var.prefix}-${local.project_id}-lacework-subscription-${random_id.uniq.hex}"
+  name                       = length(var.existing_pub_sub_subscription_name) > 0 ? var.existing_pub_sub_subscription_name : "${var.prefix}-${local.project_id}-lacework-subscription-${random_id.uniq.hex}"
   topic                      = google_pubsub_topic.lacework_topic.name
   ack_deadline_seconds       = 300
   message_retention_duration = "432000s"
