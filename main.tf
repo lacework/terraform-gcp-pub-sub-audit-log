@@ -12,6 +12,11 @@ locals {
     )
   )
 
+  topic_name = length(var.existing_pub_sub_topic_id) > 0 ? var.existing_pub_sub_topic_id : "${var.prefix}-lacework-topic-${random_id.uniq.hex}"
+  topic_id = "projects/${local.project_id}/topics/${local.topic_name}"
+  subscription_name = length(var.existing_pub_sub_subscription_name) > 0 ? var.existing_pub_sub_subscription_name : "${var.prefix}-${local.project_id}-lacework-subscription-${random_id.uniq.hex}"
+  subscription_id = "projects/${local.project_id}/subscriptions/${local.subscription_name}"
+
   service_account_name = var.use_existing_service_account ? (
     var.service_account_name
     ) : (
@@ -68,7 +73,8 @@ module "lacework_al_ps_svc_account" {
 }
 
 resource "google_pubsub_topic" "lacework_topic" {
-  name       = "${var.prefix}-lacework-topic-${random_id.uniq.hex}"
+  count      = length(var.existing_pub_sub_topic_id) > 0 ? 0 : 1
+  name       = local.topic_name
   project    = local.project_id
   depends_on = [google_project_service.required_apis]
   labels     = merge(var.labels, var.pubsub_topic_labels)
@@ -78,14 +84,15 @@ resource "google_pubsub_topic_iam_binding" "topic_publisher" {
   members    = local.logging_sink_writer_identity
   role       = "roles/pubsub.publisher"
   project    = local.project_id
-  topic      = google_pubsub_topic.lacework_topic.name
+  topic      = local.topic_name
   depends_on = [google_pubsub_topic.lacework_topic]
 }
 
 resource "google_pubsub_subscription" "lacework_subscription" {
+  count                      = length(var.existing_pub_sub_subscription_name) > 0 ? 0 : 1
   project                    = local.project_id
-  name                       = "${var.prefix}-${local.project_id}-lacework-subscription-${random_id.uniq.hex}"
-  topic                      = google_pubsub_topic.lacework_topic.name
+  name                       = local.subscription_name
+  topic                      = local.topic_name
   ack_deadline_seconds       = 300
   message_retention_duration = "432000s"
   labels                     = merge(var.labels, var.pubsub_subscription_labels)
@@ -96,7 +103,7 @@ resource "google_logging_project_sink" "lacework_project_sink" {
   count                  = length(var.existing_sink_name) > 0 ? 0 : (local.org_integration ? 0 : 1)
   project                = local.project_id
   name                   = local.sink_name
-  destination            = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic.id}"
+  destination            = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic[0].id}"
   unique_writer_identity = true
 
   filter = local.log_filter
@@ -108,7 +115,7 @@ resource "google_logging_organization_sink" "lacework_organization_sink" {
   count            = length(var.existing_sink_name) > 0 ? 0 : ((local.org_integration) ? 1 : 0)
   name             = local.sink_name
   org_id           = var.organization_id
-  destination      = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic.id}"
+  destination      = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic[0].id}"
   include_children = true
 
   filter = local.log_filter
@@ -120,7 +127,7 @@ resource "google_pubsub_subscription_iam_binding" "lacework" {
   project      = local.project_id
   role         = "roles/pubsub.subscriber"
   members      = ["serviceAccount:${local.service_account_json_key.client_email}"]
-  subscription = google_pubsub_subscription.lacework_subscription.name
+  subscription = local.subscription_name
   depends_on   = [google_pubsub_subscription.lacework_subscription]
 }
 
@@ -185,8 +192,8 @@ resource "lacework_integration_gcp_pub_sub_audit_log" "default" {
   integration_type = var.integration_type
   project_id       = local.project_id
   organization_id  = var.organization_id
-  subscription_id  = google_pubsub_subscription.lacework_subscription.id
-  topic_id         = google_pubsub_topic.lacework_topic.id
+  subscription_id  = local.subscription_id
+  topic_id         = local.topic_id
   credentials {
     client_id      = local.service_account_json_key.client_id
     private_key_id = local.service_account_json_key.private_key_id
