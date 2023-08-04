@@ -58,17 +58,7 @@ variable "existing_sink_name" {
   description = "The name of an existing sink to be re-used for this integration"
 }
 
-variable "existing_pub_sub_topic_id" {
-  type        = string
-  default     = ""
-  description = "The name of an existing pub/sub topic to be re-used for this integration"
-}
 
-variable "existing_pub_sub_subscription_name" {
-  type        = string
-  default     = ""
-  description = "The name of an existing pub/sub subscription to be re-used for this integration"
-}
 
 variable "prefix" {
   type        = string
