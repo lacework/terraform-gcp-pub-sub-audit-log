@@ -181,6 +181,7 @@ resource "time_sleep" "wait_time" {
 }
 
 resource "lacework_integration_gcp_pub_sub_audit_log" "default" {
+  count            = var.skip_create_lacework_integration ? 0 : 1
   name             = var.lacework_integration_name
   integration_type = var.integration_type
   project_id       = local.project_id

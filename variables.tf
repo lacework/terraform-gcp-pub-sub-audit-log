@@ -58,7 +58,11 @@ variable "existing_sink_name" {
   description = "The name of an existing sink to be re-used for this integration"
 }
 
-
+variable "skip_create_lacework_integration" {
+  type        = bool
+  default     = false
+  description = "Set this to true to skip creating the LW integration during GCPv1 to GCPv2 migration"
+}
 
 variable "prefix" {
   type        = string
