@@ -58,16 +58,10 @@ variable "existing_sink_name" {
   description = "The name of an existing sink to be re-used for this integration"
 }
 
-variable "existing_pub_sub_topic_id" {
-  type        = string
-  default     = ""
-  description = "The name of an existing pub/sub topic to be re-used for this integration"
-}
-
-variable "existing_pub_sub_subscription_name" {
-  type        = string
-  default     = ""
-  description = "The name of an existing pub/sub subscription to be re-used for this integration"
+variable "skip_create_lacework_integration" {
+  type        = bool
+  default     = false
+  description = "Set this to true to skip creating the LW integration during GCPv1 to GCPv2 migration"
 }
 
 variable "prefix" {

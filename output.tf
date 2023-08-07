@@ -10,12 +10,12 @@ output "service_account_private_key" {
 }
 
 output "pubsub_subscription_name" {
-  value       = local.subscription_name
+  value       = google_pubsub_subscription.lacework_subscription.name
   description = "The PubSub subscription name"
 }
 
 output "pubsub_topic_name" {
-  value       = local.topic_name
+  value       = google_pubsub_topic.lacework_topic.name
   description = "The PubSub topic name"
 }
 
