@@ -1,9 +1,7 @@
 # Release Notes
-Another day, another release. These are the release notes for the version `v0.3.0`.
+Another day, another release. These are the release notes for the version `v0.4.0`.
 
 ## Features
-* feat(RAIN-66845): add existing topic and sub logic to gcp pub/sub terraform module (#12) (Manan Bhatia)([d38dffc](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/d38dffc4bc525c4405d89764ee499149f830e78e))
-## Bug Fixes
-* fix: use browser role for service account in org level integration (#10) (freeman-lw)([9c9879b](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/9c9879b6d63bc5b7f4768f3c5a70bf5997a8aea4))
+* feat(RAIN-68431): add support to skip lacework integration creation (#15) (Manan Bhatia)([79d7b1a](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/79d7b1afd057c2edd7d91adf3545afdef8bcd00f))
 ## Other Changes
-* ci: version bump to v0.2.3-dev (Lacework)([148c713](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/148c7139e03a9beb1efcb2dabbf6bdef8a648c0a))
+* ci: version bump to v0.3.1-dev (Lacework)([fc80d31](https://github.com/lacework/terraform-gcp-pub-sub-audit-log/commit/fc80d31c7cad75971cbb2a6844bbf2734a23533f))
