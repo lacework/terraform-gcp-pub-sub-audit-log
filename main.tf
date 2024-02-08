@@ -90,6 +90,11 @@ data "google_folders" "my-org-folders" {
   parent_id = "organizations/${var.organization_id}"
 }
 
+data "google_projects" "my-org-projects" {
+  count  = (local.exclude_folders && var.include_root_projects) ? 1 : 0
+  filter = "parent.id=${var.organization_id}"
+}
+
 resource "google_project_service" "required_apis" {
   for_each = var.required_apis
   project  = local.project_id
