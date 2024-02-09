@@ -54,12 +54,17 @@ locals {
   )
 
   folders = [
+    # if setting up an org-level integration and excluding folders
     (local.org_integration && local.exclude_folders) ? (
+      # for the folders in the given org, get just the folders that haven't been excluded
       setsubtract(data.google_folders.my-org-folders[0].folders[*].name, var.folders_to_exclude)
-      ) : (
+      ) : ( # org integration but NOT excluding folders, including them; use the supplied foldes to include
       local.org_integration && local.explicit_folders) ? (
       var.folders_to_include
       ) : (
+      # if we got this far, this is an org integration but no folder inclusions or exclusions have been set
+      # we'll return an empty set but the logic for lacework_organization_sink will deploy an org-wide sink
+      # that'll catch all folders (not true if inclusions/exclusions are set)
       toset([])
     )
   ]
