@@ -63,8 +63,10 @@ cloudresourcemanager.googleapis.com
 
 | Name | Type |
 |------|------|
+| [google_logging_folder_sink.lacework_folder_sink](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_folder_sink) | resource |
 | [google_logging_organization_sink.lacework_organization_sink](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_organization_sink) | resource |
 | [google_logging_project_sink.lacework_project_sink](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_project_sink) | resource |
+| [google_logging_project_sink.lacework_root_project_sink](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_project_sink) | resource |
 | [google_organization_iam_audit_config.organization_audit_logs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_audit_config) | resource |
 | [google_organization_iam_member.for_lacework_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
 | [google_project_iam_audit_config.project_audit_logs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_audit_config) | resource |
@@ -77,7 +79,9 @@ cloudresourcemanager.googleapis.com
 | [lacework_integration_gcp_pub_sub_audit_log.default](https://registry.terraform.io/providers/lacework/lacework/latest/docs/resources/integration_gcp_pub_sub_audit_log) | resource |
 | [random_id.uniq](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [time_sleep.wait_time](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [google_folders.my-org-folders](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/folders) | data source |
 | [google_project.selected](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
+| [google_projects.my-org-projects](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/projects) | data source |
 | [lacework_metric_module.lwmetrics](https://registry.terraform.io/providers/lacework/lacework/latest/docs/data-sources/metric_module) | data source |
 
 ## Inputs
@@ -86,7 +90,10 @@ cloudresourcemanager.googleapis.com
 |------|-------------|------|---------|:--------:|
 | <a name="input_custom_filter"></a> [custom\_filter](#input\_custom\_filter) | Customer defined Audit Log filter which will supersede all other filter options when defined | `string` | `""` | no |
 | <a name="input_existing_sink_name"></a> [existing\_sink\_name](#input\_existing\_sink\_name) | The name of an existing sink to be re-used for this integration | `string` | `""` | no |
+| <a name="input_folders_to_exclude"></a> [folders\_to\_exclude](#input\_folders\_to\_exclude) | List of root folders to exclude in an organization-level integration.  Format is 'folders/1234567890' | `list(string)` | `[]` | no |
+| <a name="input_folders_to_include"></a> [folders\_to\_include](#input\_folders\_to\_include) | List of root folders to include in an organization-level integration.  Format is 'folders/1234567890' | `set(string)` | `[]` | no |
 | <a name="input_google_workspace_filter"></a> [google\_workspace\_filter](#input\_google\_workspace\_filter) | Filter out Google Workspace login logs from GCP Audit Log sinks.  Default is true | `bool` | `true` | no |
+| <a name="input_include_root_projects"></a> [include\_root\_projects](#input\_include\_root\_projects) | Enables logic to include root-level projects if excluding folders.  Default is true | `bool` | `true` | no |
 | <a name="input_integration_type"></a> [integration\_type](#input\_integration\_type) | Specify the integration type. Can only be PROJECT or ORGANIZATION. Defaults to PROJECT | `string` | `"PROJECT"` | no |
 | <a name="input_k8s_filter"></a> [k8s\_filter](#input\_k8s\_filter) | Filter out GKE logs from GCP Audit Log sinks.  Default is true | `bool` | `true` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Set of labels which will be added to the resources managed by the module | `map(string)` | `{}` | no |

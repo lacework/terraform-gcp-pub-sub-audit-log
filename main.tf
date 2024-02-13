@@ -4,11 +4,22 @@ locals {
   sink_name = length(var.existing_sink_name) > 0 ? var.existing_sink_name : (
     local.org_integration ? "${var.prefix}-${var.organization_id}-lacework-sink-${random_id.uniq.hex}" : "${var.prefix}-lacework-sink-${random_id.uniq.hex}"
   )
+
+  exclude_folders  = length(var.folders_to_exclude) != 0
+  explicit_folders = length(var.folders_to_include) != 0
+
   logging_sink_writer_identity = length(var.existing_sink_name) > 0 ? ["serviceAccount:${local.service_account_json_key.client_email}"] : (
-    (local.org_integration) ? (
+    (local.org_integration && !(local.exclude_folders || local.explicit_folders)) ? (
       [google_logging_organization_sink.lacework_organization_sink[0].writer_identity]
       ) : (
-      [google_logging_project_sink.lacework_project_sink[0].writer_identity]
+      (local.org_integration && (local.exclude_folders || local.explicit_folders)) ? (
+        concat(
+          [for v in google_logging_folder_sink.lacework_folder_sink : v.writer_identity],
+          [for v in google_logging_project_sink.lacework_root_project_sink : v.writer_identity]
+        )
+        ) : (
+        [google_logging_project_sink.lacework_project_sink[0].writer_identity]
+      )
     )
   )
 
@@ -42,6 +53,30 @@ locals {
     )
   )
 
+  folders = [
+    # if setting up an org-level integration and excluding folders
+    (local.org_integration && local.exclude_folders) ? (
+      # for the folders in the given org, get just the folders that haven't been excluded
+      setsubtract(data.google_folders.my-org-folders[0].folders[*].name, var.folders_to_exclude)
+      ) : ( # org integration but NOT excluding folders, including them; use the supplied foldes to include
+      local.org_integration && local.explicit_folders) ? (
+      var.folders_to_include
+      ) : (
+      # if we got this far, this is an org integration but no folder inclusions or exclusions have been set
+      # we'll return an empty set but the logic for lacework_organization_sink will deploy an org-wide sink
+      # that'll catch all folders (not true if inclusions/exclusions are set)
+      toset([])
+    )
+  ]
+
+  root_projects = [
+    (local.org_integration && local.exclude_folders && var.include_root_projects) ? (
+      toset(data.google_projects.my-org-projects[0].projects[*].project_id)
+      ) : (
+      toset([])
+    )
+  ]
+
   version_file   = "${abspath(path.module)}/VERSION"
   module_name    = "terraform-gcp-pub-sub-audit-log"
   module_version = fileexists(local.version_file) ? file(local.version_file) : ""
@@ -53,6 +88,16 @@ resource "random_id" "uniq" {
 
 data "google_project" "selected" {
   count = length(var.project_id) > 0 ? 0 : 1
+}
+
+data "google_folders" "my-org-folders" {
+  count     = (local.org_integration && local.exclude_folders) ? 1 : 0
+  parent_id = "organizations/${var.organization_id}"
+}
+
+data "google_projects" "my-org-projects" {
+  count  = (local.exclude_folders && var.include_root_projects) ? 1 : 0
+  filter = "parent.id=${var.organization_id}"
 }
 
 resource "google_project_service" "required_apis" {
@@ -108,8 +153,29 @@ resource "google_logging_project_sink" "lacework_project_sink" {
   depends_on = [google_pubsub_topic.lacework_topic]
 }
 
+resource "google_logging_project_sink" "lacework_root_project_sink" {
+  for_each               = local.root_projects[0]
+  project                = each.value
+  name                   = local.sink_name
+  destination            = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic.id}"
+  unique_writer_identity = true
+
+  filter     = local.log_filter
+  depends_on = [google_pubsub_topic.lacework_topic]
+}
+
+resource "google_logging_folder_sink" "lacework_folder_sink" {
+  for_each         = local.folders[0]
+  name             = local.sink_name
+  folder           = each.value
+  destination      = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic.id}"
+  include_children = true
+
+  filter = local.log_filter
+}
+
 resource "google_logging_organization_sink" "lacework_organization_sink" {
-  count            = length(var.existing_sink_name) > 0 ? 0 : ((local.org_integration) ? 1 : 0)
+  count            = length(var.existing_sink_name) > 0 ? 0 : ((local.org_integration && !(local.exclude_folders || local.explicit_folders) ? 1 : 0))
   name             = local.sink_name
   org_id           = var.organization_id
   destination      = "pubsub.googleapis.com/${google_pubsub_topic.lacework_topic.id}"
