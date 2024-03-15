@@ -3,12 +3,10 @@ name: Test Compatibility
 on: 
   workflow_dispatch:
   push:
-  issue_comment:                                     
-    types: [created, edited]
 
 jobs:
   call-test-compatibility:
     uses: lacework/oss-actions/.github/workflows/tf-test-compatibility.yml@main
     secrets: inherit
     with:
-      trigger-release: contains(github.event.comment.html_url, '/pull/') &&  contains(github.event.comment.body, 'make it so') 
+      trigger-release: false 
