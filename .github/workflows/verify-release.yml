@@ -7,6 +7,6 @@ on:
       - release
 
 jobs:
-  call-nightly-workflow:
+  call-verify-release:
     uses: lacework/oss-actions/.github/workflows/tf-verify.yml@main
     secrets: inherit

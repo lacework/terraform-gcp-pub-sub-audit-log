@@ -7,6 +7,6 @@ on:
       - 'v*'
 
 jobs:
-  call-nightly-workflow:
+  call-release:
     uses: lacework/oss-actions/.github/workflows/tf-release.yml@main
     secrets: inherit

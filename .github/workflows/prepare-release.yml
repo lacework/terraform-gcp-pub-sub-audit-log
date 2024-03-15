@@ -3,6 +3,6 @@ name: Prepare Release
 on: workflow_dispatch
 
 jobs:
-  call-nightly-workflow:
+  call-prepare-release:
     uses: lacework/oss-actions/.github/workflows/tf-prepare-release.yml@main
     secrets: inherit
