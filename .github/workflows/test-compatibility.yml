@@ -1,0 +1,19 @@
+name: Test Compatibility
+
+on: 
+  workflow_dispatch:
+  push:
+
+jobs:
+  call-test-compat-with-trigger:
+    if:  github.ref == 'refs/heads/main'
+    uses: lacework/oss-actions/.github/workflows/tf-test-compatibility.yml@main
+    secrets: inherit
+    with:
+      trigger-release: true
+  call-test-compat-without-trigger:
+    if: github.ref != 'refs/heads/main'
+    uses: lacework/oss-actions/.github/workflows/tf-test-compatibility.yml@main
+    secrets: inherit
+    with:
+      trigger-release: false
