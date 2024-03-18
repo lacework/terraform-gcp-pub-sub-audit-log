@@ -1,4 +1,4 @@
-name: Test Compatibility
+name: Test Compatibility and Trigger Release
 
 on: 
   workflow_dispatch:
