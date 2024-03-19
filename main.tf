@@ -110,7 +110,7 @@ resource "google_project_service" "required_apis" {
 
 module "lacework_al_ps_svc_account" {
   source               = "lacework/service-account/gcp"
-  version              = "~> 1.0"
+  version              = "~> 2.0"
   create               = var.use_existing_service_account ? false : true
   service_account_name = local.service_account_name
   project_id           = local.project_id

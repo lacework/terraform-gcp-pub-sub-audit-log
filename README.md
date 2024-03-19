@@ -57,7 +57,7 @@ cloudresourcemanager.googleapis.com
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_lacework_al_ps_svc_account"></a> [lacework\_al\_ps\_svc\_account](#module\_lacework\_al\_ps\_svc\_account) | lacework/service-account/gcp | ~> 1.0 |
+| <a name="module_lacework_al_ps_svc_account"></a> [lacework\_al\_ps\_svc\_account](#module\_lacework\_al\_ps\_svc\_account) | lacework/service-account/gcp | ~> 2.0 |
 
 ## Resources
 
