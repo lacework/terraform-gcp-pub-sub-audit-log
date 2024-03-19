@@ -1,12 +1,13 @@
-name: Test Compatibility and Trigger Release For External PR
+name: Test Compatibility On Comment
 
 on: 
   workflow_dispatch:
-  issue_comment:                                     
-    types: [created, edited]
+  # issue_comment:                                     
+  #   types: [created, edited]
 
 jobs:
-  call-test-compatibility:
+  check-commenting-user:
+    runs-on: ubuntu-latest
     if: ${{  contains(github.event.comment.html_url, '/pull/') &&  contains(github.event.comment.body, 'make it so') }}
     steps:
       - uses: actions/github-script@v7
@@ -21,7 +22,7 @@ jobs:
             if (result.state != "active" ) {
               core.setFailed('Commenter is not a member of the growth team.')
             }
-      - uses: lacework/oss-actions/.github/workflows/tf-test-compatibility.yml@main
-        secrets: inherit
-        with:
-          trigger-release: true 
+  call-test-compat:
+    needs: check-commenting-user
+    uses: lacework/oss-actions/.github/workflows/tf-test-compatibility.yml@main
+    secrets: inherit
