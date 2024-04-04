@@ -22,6 +22,7 @@ jobs:
             if (result.state != "active" ) {
               core.setFailed('Commenter is not a member of the growth team.')
             }
+
   call-test-compat:
     needs: check-commenting-user
     uses: lacework/oss-actions/.github/workflows/tf-test-compatibility.yml@main
