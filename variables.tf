@@ -77,8 +77,9 @@ variable "labels" {
 }
 
 variable "lacework_integration_name" {
-  type    = string
-  default = "TF pub_sub_audit_log"
+  type        = string
+  default     = "TF Audit Log"
+  description = "The Lacework integration name"
 }
 
 variable "wait_time" {

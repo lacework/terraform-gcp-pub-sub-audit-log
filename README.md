@@ -97,7 +97,7 @@ cloudresourcemanager.googleapis.com
 | <a name="input_integration_type"></a> [integration\_type](#input\_integration\_type) | Specify the integration type. Can only be PROJECT or ORGANIZATION. Defaults to PROJECT | `string` | `"PROJECT"` | no |
 | <a name="input_k8s_filter"></a> [k8s\_filter](#input\_k8s\_filter) | Filter out GKE logs from GCP Audit Log sinks.  Default is true | `bool` | `true` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Set of labels which will be added to the resources managed by the module | `map(string)` | `{}` | no |
-| <a name="input_lacework_integration_name"></a> [lacework\_integration\_name](#input\_lacework\_integration\_name) | n/a | `string` | `"TF pub_sub_audit_log"` | no |
+| <a name="input_lacework_integration_name"></a> [lacework\_integration\_name](#input\_lacework\_integration\_name) | The Lacework integration name | `string` | `"TF Audit Log"` | no |
 | <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The organization ID, required if integration\_type is set to ORGANIZATION | `string` | `""` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | The prefix that will be use at the beginning of every generated resource | `string` | `"lw-al-ps"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | A project ID different from the default defined inside the provider | `string` | `""` | no |
